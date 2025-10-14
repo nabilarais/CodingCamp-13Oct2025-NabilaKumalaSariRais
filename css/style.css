@@ -1,0 +1,304 @@
+:root {
+    color-scheme: dark;
+    --bg-main: #140d24;
+    --bg-panel: #25143e;
+    --bg-panel-accent: #341f57;
+    --accent: #8c6cff;
+    --accent-strong: #a18aff;
+    --danger: #ff5f7a;
+    --text-primary: #f3edff;
+    --text-secondary: #b7a7d9;
+    --border: rgba(180, 150, 255, 0.16);
+    --radius: 14px;
+    --shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at top, rgba(162, 120, 255, 0.2), transparent 60%), radial-gradient(circle at bottom left, rgba(111, 66, 193, 0.15), transparent 55%), var(--bg-main);
+    color: var(--text-primary);
+    display: grid;
+    place-items: center;
+    padding: 40px 16px;
+}
+
+.app {
+    width: min(720px, 100%);
+}
+
+.panel {
+    background: linear-gradient(135deg, rgba(37, 20, 79, 0.9), rgba(28, 16, 58, 0.95));
+    padding: 32px clamp(20px, 5vw, 36px);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+}
+
+.panel__header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.panel__header h1 {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    margin: 0 0 8px;
+    letter-spacing: 0.05em;
+}
+
+.panel__header p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.task-form {
+    display: grid;
+    grid-template-columns: 1fr minmax(150px, 200px) auto;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.task-form input {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25);
+}
+
+.task-form input::placeholder {
+    color: var(--text-secondary);
+}
+
+.icon-button {
+    width: 52px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.icon-button:active {
+    transform: scale(0.96);
+}
+
+.icon-button:hover {
+    filter: brightness(1.05);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.filter-group select {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.danger-button {
+    background: none;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.danger-button:hover {
+    background-color: rgba(255, 95, 122, 0.12);
+}
+
+.table-wrapper {
+    border-radius: 12px;
+    background: rgba(37, 46, 69, 0.55);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgba(255, 255, 255, 0.04);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+th,
+td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.status-chip--pending {
+    background-color: rgba(255, 200, 98, 0.15);
+    color: #fcd186;
+}
+
+.status-chip--completed {
+    background-color: rgba(110, 235, 160, 0.15);
+    color: #8fefc0;
+}
+
+.status-chip--overdue {
+    background-color: rgba(255, 87, 127, 0.15);
+    color: #ff7f9c;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: opacity 0.2s ease;
+}
+
+.actions button[data-action="toggle"] {
+    background-color: rgba(108, 99, 255, 0.3);
+}
+
+.actions button[data-action="toggle"].is-completed {
+    background-color: rgba(110, 235, 160, 0.23);
+}
+
+.actions button[data-action="delete"] {
+    background-color: rgba(255, 95, 122, 0.3);
+}
+
+.actions button:hover {
+    opacity: 0.85;
+}
+
+.empty-row td {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .task-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .icon-button {
+        grid-column: span 2;
+        justify-self: center;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 16px;
+        gap: 8px;
+    }
+
+    tbody td {
+        padding: 0;
+        border: none;
+    }
+
+    tbody td:nth-child(1) {
+        grid-column: span 2;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    tbody td:nth-child(2),
+    tbody td:nth-child(3),
+    tbody td:nth-child(4) {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .actions {
+        justify-content: flex-end;
+    }
+}

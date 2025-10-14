@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="app">
+        <section class="panel">
+            <header class="panel__header">
+                <h1>To-Do List</h1>
+                <p>Plan your day, focus on what matters.</p>
+            </header>
+            <form id="task-form" class="task-form" novalidate>
+                <label class="sr-only" for="task-input">Task description</label>
+                <input id="task-input" name="task" type="text" placeholder="Add a todo..." maxlength="120" required>
+
+                <label class="sr-only" for="date-input">Due date</label>
+                <input id="date-input" name="dueDate" type="date" required>
+
+                <button type="submit" class="icon-button" aria-label="Add task">+</button>
+            </form>
+
+            <div class="toolbar">
+                <div class="filter-group">
+                    <label for="status-filter">Filter</label>
+                    <select id="status-filter">
+                        <option value="all">All tasks</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </div>
+                <button id="delete-all" type="button" class="danger-button">Delete All</button>
+            </div>
+
+            <div class="table-wrapper" aria-live="polite">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Task</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-list">
+                        <tr class="empty-row">
+                            <td colspan="4">No tasks found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js" defer></script>
+</body>
+</html>
