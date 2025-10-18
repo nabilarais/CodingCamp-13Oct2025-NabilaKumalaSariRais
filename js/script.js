@@ -3,11 +3,14 @@ const STORAGE_KEY = "todo-list";
 const form = document.querySelector("#task-form");
 const taskInput = document.querySelector("#task-input");
 const dateInput = document.querySelector("#date-input");
+const submitButton = form.querySelector("button[type=\"submit\"]");
 const taskList = document.querySelector("#task-list");
 const statusFilter = document.querySelector("#status-filter");
 const deleteAllButton = document.querySelector("#delete-all");
+const cancelEditButton = document.querySelector("#cancel-edit");
 
 let tasks = loadTasks();
+let editingId = null;
 setMinDueDate();
 renderTasks();
 
@@ -38,6 +41,18 @@ form.addEventListener("submit", (event) => {
         return;
     }
 
+    if (editingId) {
+        tasks = tasks.map((task) =>
+            task.id === editingId
+                ? { ...task, title: taskTitle, dueDate }
+                : task
+        );
+        persistTasks();
+        renderTasks();
+        exitEditMode();
+        return;
+    }
+
     const newTask = {
         id: crypto.randomUUID(),
         title: taskTitle,
@@ -56,6 +71,7 @@ form.addEventListener("submit", (event) => {
 });
 
 statusFilter.addEventListener("change", renderTasks);
+cancelEditButton.addEventListener("click", () => exitEditMode());
 
 deleteAllButton.addEventListener("click", () => {
     if (!tasks.length) {
@@ -85,6 +101,8 @@ taskList.addEventListener("click", (event) => {
         toggleTask(taskId);
     } else if (action === "important") {
         toggleImportant(taskId);
+    } else if (action === "edit") {
+        startEdit(taskId);
     } else if (action === "delete") {
         deleteTask(taskId);
     }
@@ -109,8 +127,11 @@ function renderTasks() {
         row.dataset.id = task.id;
         row.classList.toggle("is-important", task.important);
         const titleClass = task.important ? "task-title task-title--important" : "task-title";
+        const titleContent = task.important
+            ? `<span class="task-title__icon" aria-hidden="true">★</span><span>${escapeHTML(task.title)}</span><span class="sr-only">(Important)</span>`
+            : escapeHTML(task.title);
         row.innerHTML = `
-            <td><span class="${titleClass}">${escapeHTML(task.title)}</span></td>
+            <td><span class="${titleClass}">${titleContent}</span></td>
             <td>${formatDate(task.dueDate)}</td>
             <td>${buildStatusChip(task)}</td>
             <td>
@@ -121,6 +142,7 @@ function renderTasks() {
                     <button type="button" data-action="important" class="${task.important ? "is-important" : ""}">
                         ${task.important ? "Unmark Important" : "Mark Important"}
                     </button>
+                    <button type="button" data-action="edit">Edit</button>
                     <button type="button" data-action="delete">Delete</button>
                 </div>
             </td>
@@ -278,4 +300,30 @@ function escapeHTML(value) {
     const div = document.createElement("div");
     div.textContent = value;
     return div.innerHTML;
+}
+
+function startEdit(taskId) {
+    const task = tasks.find((item) => item.id === taskId);
+    if (!task) {
+        return;
+    }
+
+    editingId = taskId;
+    taskInput.value = task.title;
+    dateInput.value = task.dueDate;
+    submitButton.textContent = "✓";
+    submitButton.setAttribute("aria-label", "Save task");
+    form.classList.add("is-editing");
+    clearValidation();
+    taskInput.focus();
+}
+
+function exitEditMode() {
+    editingId = null;
+    form.classList.remove("is-editing");
+    submitButton.textContent = "+";
+    submitButton.setAttribute("aria-label", "Add task");
+    form.reset();
+    setMinDueDate();
+    clearValidation();
 }

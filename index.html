@@ -15,12 +15,13 @@
             </header>
             <form id="task-form" class="task-form" novalidate>
                 <label class="sr-only" for="task-input">Task description</label>
-                <input id="task-input" name="task" type="text" placeholder="Add a todo..." maxlength="120" required>
+                <input id="task-input" name="task" type="text" placeholder="Add a to-do..." maxlength="120" required>
 
                 <label class="sr-only" for="date-input">Due date</label>
                 <input id="date-input" name="dueDate" type="date" required>
 
                 <button type="submit" class="icon-button" aria-label="Add task">+</button>
+                <button type="button" id="cancel-edit" class="ghost-button">Cancel Edit</button>
             </form>
 
             <div class="toolbar">
