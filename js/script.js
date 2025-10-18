@@ -191,6 +191,10 @@ function getFilteredTasks() {
             return task.completed;
         }
 
+        if (view === "important") {
+            return task.important;
+        }
+
         if (view === "overdue") {
             return !task.completed && isPastDate(task.dueDate);
         }
