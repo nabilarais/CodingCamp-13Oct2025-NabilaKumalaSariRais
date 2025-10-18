@@ -192,6 +192,10 @@ tbody tr:last-child td {
     border-bottom: none;
 }
 
+tbody tr.is-important {
+    background-color: rgba(162, 120, 255, 0.08);
+}
+
 .status-chip {
     display: inline-flex;
     align-items: center;
@@ -218,6 +222,11 @@ tbody tr:last-child td {
     color: #ff7f9c;
 }
 
+.status-chip--important {
+    background-color: rgba(186, 146, 255, 0.25);
+    color: var(--accent-strong);
+}
+
 .actions {
     display: flex;
     gap: 10px;
@@ -238,6 +247,14 @@ tbody tr:last-child td {
     background-color: rgba(108, 99, 255, 0.3);
 }
 
+.actions button[data-action="important"] {
+    background-color: rgba(186, 146, 255, 0.28);
+}
+
+.actions button[data-action="important"].is-important {
+    background-color: rgba(162, 120, 255, 0.48);
+}
+
 .actions button[data-action="toggle"].is-completed {
     background-color: rgba(110, 235, 160, 0.23);
 }
@@ -248,6 +265,29 @@ tbody tr:last-child td {
 
 .actions button:hover {
     opacity: 0.85;
+}
+
+.task-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-title::before {
+    content: "";
+    width: 0;
+    height: 0;
+}
+
+.task-title--important {
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.task-title--important::before {
+    content: "★";
+    color: var(--accent-strong);
+    font-size: 1rem;
 }
 
 .empty-row td {

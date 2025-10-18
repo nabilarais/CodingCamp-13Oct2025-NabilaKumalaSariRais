@@ -43,6 +43,7 @@ form.addEventListener("submit", (event) => {
         title: taskTitle,
         dueDate,
         completed: false,
+        important: false,
         createdAt: new Date().toISOString()
     };
 
@@ -82,6 +83,8 @@ taskList.addEventListener("click", (event) => {
 
     if (action === "toggle") {
         toggleTask(taskId);
+    } else if (action === "important") {
+        toggleImportant(taskId);
     } else if (action === "delete") {
         deleteTask(taskId);
     }
@@ -99,17 +102,24 @@ function renderTasks() {
         return;
     }
 
-    for (const task of filteredTasks) {
+    const displayTasks = sortTasks(filteredTasks);
+
+    for (const task of displayTasks) {
         const row = document.createElement("tr");
         row.dataset.id = task.id;
+        row.classList.toggle("is-important", task.important);
+        const titleClass = task.important ? "task-title task-title--important" : "task-title";
         row.innerHTML = `
-            <td>${escapeHTML(task.title)}</td>
+            <td><span class="${titleClass}">${escapeHTML(task.title)}</span></td>
             <td>${formatDate(task.dueDate)}</td>
             <td>${buildStatusChip(task)}</td>
             <td>
                 <div class="actions">
                     <button type="button" data-action="toggle" class="${task.completed ? "is-completed" : ""}">
                         ${task.completed ? "Mark Pending" : "Mark Done"}
+                    </button>
+                    <button type="button" data-action="important" class="${task.important ? "is-important" : ""}">
+                        ${task.important ? "Unmark Important" : "Mark Important"}
                     </button>
                     <button type="button" data-action="delete">Delete</button>
                 </div>
@@ -121,9 +131,27 @@ function renderTasks() {
 
 function buildStatusChip(task) {
     const overdue = isPastDate(task.dueDate) && !task.completed;
-    const baseClass = overdue ? "status-chip status-chip--overdue" : `status-chip status-chip--${task.completed ? "completed" : "pending"}`;
-    const label = overdue ? "Overdue" : task.completed ? "Completed" : "Pending";
-    return `<span class="${baseClass}">${label}</span>`;
+    const classes = [
+        "status-chip",
+        overdue ? "status-chip--overdue" : `status-chip--${task.completed ? "completed" : "pending"}`
+    ];
+
+    if (task.important) {
+        classes.push("status-chip--important");
+    }
+
+    const labels = [];
+    if (overdue) {
+        labels.push("Overdue");
+    } else {
+        labels.push(task.completed ? "Completed" : "Pending");
+    }
+
+    if (task.important) {
+        labels.push("Important");
+    }
+
+    return `<span class="${classes.join(" ")}">${labels.join(" • ")}</span>`;
 }
 
 function getFilteredTasks() {
@@ -159,6 +187,16 @@ function toggleTask(taskId) {
     renderTasks();
 }
 
+function toggleImportant(taskId) {
+    tasks = tasks.map((task) =>
+        task.id === taskId
+            ? { ...task, important: !task.important }
+            : task
+    );
+    persistTasks();
+    renderTasks();
+}
+
 function deleteTask(taskId) {
     tasks = tasks.filter((task) => task.id !== taskId);
     persistTasks();
@@ -171,7 +209,11 @@ function loadTasks() {
         if (!Array.isArray(data)) {
             return [];
         }
-        return data;
+        return data.map((task) => ({
+            ...task,
+            completed: Boolean(task.completed),
+            important: Boolean(task.important)
+        }));
     } catch (error) {
         console.warn("Failed to load tasks from storage.", error);
         return [];
@@ -204,6 +246,21 @@ function isPastDate(dateString) {
         return false;
     }
     return date < today;
+}
+
+function sortTasks(taskItems) {
+    const important = [];
+    const regular = [];
+
+    for (const task of taskItems) {
+        if (task.important) {
+            important.push(task);
+        } else {
+            regular.push(task);
+        }
+    }
+
+    return important.concat(regular);
 }
 
 function setMinDueDate() {
