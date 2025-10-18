@@ -2,6 +2,7 @@ const STORAGE_KEY = "todo-list";
 
 const form = document.querySelector("#task-form");
 const taskInput = document.querySelector("#task-input");
+const descriptionInput = document.querySelector("#description-input");
 const dateInput = document.querySelector("#date-input");
 const submitButton = form.querySelector("button[type=\"submit\"]");
 const taskList = document.querySelector("#task-list");
@@ -19,6 +20,7 @@ form.addEventListener("submit", (event) => {
 
     clearValidation();
     const taskTitle = taskInput.value.trim();
+    const taskDescription = descriptionInput.value.trim();
     const dueDate = dateInput.value;
 
     let hasError = false;
@@ -44,7 +46,7 @@ form.addEventListener("submit", (event) => {
     if (editingId) {
         tasks = tasks.map((task) =>
             task.id === editingId
-                ? { ...task, title: taskTitle, dueDate }
+                ? { ...task, title: taskTitle, description: taskDescription, dueDate }
                 : task
         );
         persistTasks();
@@ -59,6 +61,7 @@ form.addEventListener("submit", (event) => {
         dueDate,
         completed: false,
         important: false,
+        description: taskDescription,
         createdAt: new Date().toISOString()
     };
 
@@ -130,8 +133,16 @@ function renderTasks() {
         const titleContent = task.important
             ? `<span class="task-title__icon" aria-hidden="true">★</span><span>${escapeHTML(task.title)}</span><span class="sr-only">(Important)</span>`
             : escapeHTML(task.title);
+        const descriptionMarkup = task.description
+            ? `<p class="task-description">${escapeHTML(task.description)}</p>`
+            : "";
         row.innerHTML = `
-            <td><span class="${titleClass}">${titleContent}</span></td>
+            <td>
+                <div class="task-cell">
+                    <span class="${titleClass}">${titleContent}</span>
+                    ${descriptionMarkup}
+                </div>
+            </td>
             <td>${formatDate(task.dueDate)}</td>
             <td>${buildStatusChip(task)}</td>
             <td>
@@ -238,7 +249,8 @@ function loadTasks() {
         return data.map((task) => ({
             ...task,
             completed: Boolean(task.completed),
-            important: Boolean(task.important)
+            important: Boolean(task.important),
+            description: typeof task.description === "string" ? task.description : ""
         }));
     } catch (error) {
         console.warn("Failed to load tasks from storage.", error);
@@ -314,6 +326,7 @@ function startEdit(taskId) {
 
     editingId = taskId;
     taskInput.value = task.title;
+    descriptionInput.value = task.description || "";
     dateInput.value = task.dueDate;
     submitButton.textContent = "✓";
     submitButton.setAttribute("aria-label", "Save task");

@@ -73,6 +73,7 @@ body {
     grid-template-columns: 1fr minmax(150px, 200px) auto;
     gap: 12px;
     margin-bottom: 24px;
+    align-items: start;
 }
 
 .task-form.is-editing {
@@ -97,6 +98,30 @@ body {
 
 .task-form input::placeholder {
     color: var(--text-secondary);
+}
+
+.task-form textarea {
+    grid-column: 1 / -1;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    resize: vertical;
+    min-height: 110px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25);
+}
+
+.task-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.45);
 }
 
 .task-form.is-editing .icon-button {
@@ -129,6 +154,10 @@ body {
 #cancel-edit:hover {
     background-color: rgba(255, 255, 255, 0.08);
     border-color: rgba(162, 120, 255, 0.5);
+}
+
+.task-form .icon-button {
+    justify-self: end;
 }
 
 .icon-button {
@@ -305,6 +334,20 @@ tbody tr.is-important {
 
 .actions button:hover {
     opacity: 0.85;
+}
+
+.task-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.task-description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
 }
 
 .task-title {
